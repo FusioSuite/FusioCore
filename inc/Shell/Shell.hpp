@@ -6,6 +6,8 @@
 #include <string>
 #include "Version.hpp"
 
+#include "Logger/Logger.hpp"
+
 enum class ShellType {
     DEFAULT,
     INFO,
@@ -37,12 +39,21 @@ class Shell {
         // Fonction pour afficher les informations du projet
         void printProjectInfo() const;
 
+        std::string waitInput(const std::string& message) const;
+
+        void log(const std::string& message);
+        
+        // Fonction pour effacer les logs
+        void clearLogs();
+
     private:
         // Constructeur privé
         Shell();
         
         // Destructeur privé
         ~Shell();
+
+        Logger logger;
 };
 
 #endif // SHELL_HPP

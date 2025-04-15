@@ -1,7 +1,7 @@
 #include "Shell/Shell.hpp"
 
 // Constructeur privé
-Shell::Shell() {
+Shell::Shell() : logger("command_history.txt") {
 }
 
 // Destructeur privé
@@ -54,4 +54,19 @@ void Shell::printBold(const std::string& message, ShellType type, bool newLine) 
 // Implémentation de la fonction printProjectInfo
 void Shell::printProjectInfo() const {
     printBold("=== " + std::string(FusioCore::Version::NAME) + " v" + std::string(FusioCore::Version::VERSION) + " ===", ShellType::INFO);
+}
+
+std::string Shell::waitInput(const std::string& message) const {
+    print(message, false);
+    std::string input;
+    std::getline(std::cin, input);
+    return input;
+}
+
+void Shell::log(const std::string& message) {
+    logger.log(message);
+}
+
+void Shell::clearLogs() {
+    logger.clearLogs();
 }
