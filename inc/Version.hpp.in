@@ -1,0 +1,40 @@
+#ifndef VERSION_HPP
+#define VERSION_HPP
+
+#include <string>
+
+namespace FusioCore {
+
+// Informations sur le projet générées automatiquement par CMake
+struct Version {
+    // Version du projet
+    static constexpr const char* VERSION = "@PROJECT_VERSION@";
+    
+    // Nom du projet
+    static constexpr const char* NAME = "@PROJECT_NAME@";
+    
+    // Description du projet
+    static constexpr const char* DESCRIPTION = "@PROJECT_DESCRIPTION@";
+    
+    // Auteur du projet
+    static constexpr const char* AUTHOR = "@PROJECT_AUTHOR@";
+    
+    // Année de création
+    static constexpr const char* YEAR = "@PROJECT_YEAR@";
+    
+    // URL du projet
+    static constexpr const char* URL = "@PROJECT_URL@";
+    
+    // Date de compilation
+    static constexpr const char* BUILD_DATE = "@CMAKE_BUILD_DATE@";
+    
+    // Compilateur utilisé
+    static constexpr const char* COMPILER = "@CMAKE_CXX_COMPILER_ID@";
+    
+    // Version du compilateur
+    static constexpr const char* COMPILER_VERSION = "@CMAKE_CXX_COMPILER_VERSION@";
+};
+
+} // namespace FusioCore
+
+#endif // VERSION_HPP 
