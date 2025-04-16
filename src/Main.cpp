@@ -8,8 +8,6 @@ int main() {
         if (input == "exit") {
             break;
         }
-        shell.log(input);
     }
-    shell.clearLogs();
     return 0;
 }

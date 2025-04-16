@@ -6,8 +6,6 @@
 #include <string>
 #include "Version.hpp"
 
-#include "Logger/Logger.hpp"
-#include "CommandHistory.hpp"
 enum class ShellType {
     DEFAULT,
     INFO,
@@ -52,10 +50,6 @@ class Shell {
         
         // Destructeur privé
         ~Shell();
-
-        Logger logger;
-
-        CommandHistory* commandHistory;
 };
 
 #endif // SHELL_HPP

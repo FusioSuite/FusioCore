@@ -15,17 +15,15 @@ enum class LogType {
 
 class Logger {
 public:
-    // === Singleton global ===
-    static Logger& getGlobal();
-
-    // === Constructeur normal ===
-    Logger(const std::string& filePath);
-    ~Logger();
+    static Logger& getInstance();
 
     void log(const std::string& message, LogType type = LogType::DEFAULT);
     void clearLogs();
 
 private:
+    Logger(const std::string& filePath);
+    ~Logger();
+
     std::string filePath;
     std::ofstream file;
     std::mutex logMutex;

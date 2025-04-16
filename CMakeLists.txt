@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Ajouter les répertoires d'en-tête
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/external/linenoise)
 
 # Définir les variables pour le fichier Version.hpp
 set(PROJECT_DESCRIPTION "Core software for the FusioSuite")
@@ -45,3 +46,6 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+add_subdirectory(external/linenoise)
+target_link_libraries(${PROJECT_NAME} PRIVATE linenoise)

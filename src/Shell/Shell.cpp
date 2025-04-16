@@ -1,14 +1,37 @@
 #include "Shell/Shell.hpp"
+#include "linenoise.h"
+
+#include <vector>
+
+std::vector<std::string> keywords = {
+    "clear", "close", "clone", "cd", "cat", "chmod"
+};
+
+
+void completionCallback(const char* input, linenoiseCompletions* lc) {
+    std::string prefix(input);
+    std::vector<std::string> matches;
+
+    for (const auto& kw : keywords) {
+        if (kw.rfind(prefix, 0) == 0) { // starts_with
+            linenoiseAddCompletion(lc, kw.c_str());
+            matches.push_back(kw);
+        }
+    }
+
+    if (matches.empty()) {
+        linenoiseAddCompletion(lc, input); // Ne complète rien, mais bloque le tab
+    }
+}
 
 // Constructeur privé
-Shell::Shell() : 
-    logger("command_history.txt"),
-    commandHistory(nullptr) {
+Shell::Shell() {
+    linenoiseHistoryLoad("command_history.txt");
+    linenoiseSetCompletionCallback(completionCallback);
 }
 
 // Destructeur privé
 Shell::~Shell() {
-    delete commandHistory;
 }
 
 // Méthode pour obtenir l'instance unique (thread-safe depuis C++11)
@@ -60,16 +83,15 @@ void Shell::printProjectInfo() const {
 }
 
 std::string Shell::waitInput(const std::string& message) const {
-    print(message, false);
-    std::string input;
-    std::getline(std::cin, input);
+    char* line = linenoise(message.c_str());
+
+    std::string input(line);
+    free(line);
+
+    linenoiseHistoryAdd(input.c_str());
+    linenoiseHistorySave("command_history.txt");
+
     return input;
+    // execute(input); // ⇨ ton moteur de commande
 }
 
-void Shell::log(const std::string& message) {
-    logger.log(message);
-}
-
-void Shell::clearLogs() {
-    logger.clearLogs();
-}

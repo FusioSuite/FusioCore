@@ -3,9 +3,9 @@
 #include <ctime>
 #include <iostream>
 
-Logger& Logger::getGlobal() {
-    static Logger globalLogger("fusio_log.txt");
-    return globalLogger;
+Logger& Logger::getInstance() {
+    static Logger instance("fusio_log.txt");
+    return instance;
 }
 
 Logger::Logger(const std::string& filePath) : filePath(filePath) {
