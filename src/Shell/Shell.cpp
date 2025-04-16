@@ -1,11 +1,14 @@
 #include "Shell/Shell.hpp"
 
 // Constructeur privé
-Shell::Shell() : logger("command_history.txt") {
+Shell::Shell() : 
+    logger("command_history.txt"),
+    commandHistory(nullptr) {
 }
 
 // Destructeur privé
 Shell::~Shell() {
+    delete commandHistory;
 }
 
 // Méthode pour obtenir l'instance unique (thread-safe depuis C++11)

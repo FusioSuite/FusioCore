@@ -7,7 +7,7 @@
 #include "Version.hpp"
 
 #include "Logger/Logger.hpp"
-
+#include "CommandHistory.hpp"
 enum class ShellType {
     DEFAULT,
     INFO,
@@ -54,6 +54,8 @@ class Shell {
         ~Shell();
 
         Logger logger;
+
+        CommandHistory* commandHistory;
 };
 
 #endif // SHELL_HPP
