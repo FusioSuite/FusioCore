@@ -20,6 +20,10 @@ const std::vector<std::string> basicCommands = {
     "clear", "exit", "help", "cd", "pwd", "ls"
 };
 
+std::string formatPrompt(const std::string& message) {
+    return "\033[0m" + message + "\033[0m";
+}
+
 replxx::Replxx::completions_t basic_completion_callback(const std::string& input, int& contextLen) {
     replxx::Replxx::completions_t completions;
     contextLen = input.size();
@@ -93,9 +97,10 @@ void Shell_Replxx::print(const std::string& message, ShellType type, bool newLin
         case ShellType::SUCCESS: std::cout << "\033[92m"; break;
         default: break;
     }
-    std::cout << message << (newLine ? "\n" : "");
-
-    // Reset color
+    std::cout << message;
+    if (newLine) {
+        std::cout << "\n";
+    }
     std::cout << "\033[0m";
 }
 
@@ -115,7 +120,7 @@ void Shell_Replxx::printProjectInfo() const {
 
 std::string Shell_Replxx::waitInput(const std::string& message) {
     std::string line;
-    if (auto input = rx.input(message)) {
+    if (auto input = rx.input(formatPrompt(message))) {
         line = input;
         if (!line.empty()) {
             rx.history_add(line);
