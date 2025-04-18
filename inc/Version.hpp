@@ -26,7 +26,7 @@ struct Version {
     static constexpr const char* URL = "https://github.com/FusioSuite/FusioCore";
     
     // Date de compilation
-    static constexpr const char* BUILD_DATE = "2025-04-17";
+    static constexpr const char* BUILD_DATE = "2025-04-18";
     
     // Compilateur utilisé
     static constexpr const char* COMPILER = "GNU";

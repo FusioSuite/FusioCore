@@ -1,7 +1,7 @@
-#include "Shell/Shell.hpp"
+#include "Shell/Shell_Replxx.hpp"
 
 int main() {
-    Shell& shell = Shell::getInstance();
+    FusioCore::Shell& shell = FusioCore::Shell_Replxx::getInstance();
     shell.printProjectInfo();
     while (true) {
         std::string input = shell.waitInput(">> ");
