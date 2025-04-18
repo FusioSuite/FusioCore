@@ -19,18 +19,6 @@ string(TIMESTAMP CMAKE_BUILD_DATE "%Y-%m-%d")
 # Trouver le module Threads avant replxx
 find_package(Threads REQUIRED)
 
-# Trouver ou télécharger les dépendances externes
-find_package(replxx QUIET)
-if(NOT replxx_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        replxx
-        GIT_REPOSITORY https://github.com/AmokHuginnsson/replxx
-        GIT_TAG master
-    )
-    FetchContent_MakeAvailable(replxx)
-endif()
-
 # Générer un fichier d'en-tête avec les informations du projet
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/inc/Version.hpp.in
@@ -51,7 +39,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # Lier les bibliothèques externes
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-    replxx::replxx
+    readline
     Threads::Threads
 )
 

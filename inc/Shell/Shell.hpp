@@ -1,47 +1,44 @@
-#ifndef SHELL_HPP
-#define SHELL_HPP
+#pragma once
 
-#include <string>
-#include <iostream>
+#include "Shell/IShell.hpp"
+#include "Shell/ANSI.hpp"
+#include <memory>
 
 namespace FusioCore {
-enum class ShellType {
-    DEFAULT,
-    INFO,
-    WARNING,
-    ERROR,
-    SUCCESS
-};
 
-class Shell {
-protected:
-    // Constructeur et destructeur protégés pour permettre l'héritage
-    Shell();
-    virtual ~Shell();
-    
-private:
-    // Supprimer les constructeurs de copie et d'affectation
-    Shell(const Shell&) = delete;
-    Shell& operator=(const Shell&) = delete;
-    
+class Shell : public IShell {
 public:
-    // Obtenir l'instance unique
     static Shell& getInstance();
-    
-    // Méthodes pour afficher du texte
-    virtual void print(const std::string& message, bool newLine = true) const = 0;
-    virtual void print(const std::string& message, ShellType type, bool newLine = true) const = 0;
-    
-    virtual void printBold(const std::string& message, bool newLine = true) const = 0;
-    virtual void printBold(const std::string& message, ShellType type, bool newLine = true) const = 0;
-    
-    // Afficher les informations du projet
-    virtual void printProjectInfo() const = 0;
-    
-    // Attendre l'entrée utilisateur - maintenant non-const
-    virtual std::string waitInput(const std::string& message) = 0;
+
+    // Constructeur et destructeur
+    Shell();
+    ~Shell() override;
+
+    // Implémentation des méthodes d'affichage
+    void print(const std::string& message, bool newLine = true) const override;
+    void print(const std::string& message, ShellType type, bool newLine = true) const override;
+    void printBold(const std::string& message, bool newLine = true) const override;
+    void printBold(const std::string& message, ShellType type, bool newLine = true) const override;
+    void printProjectInfo() const override;
+
+    // Implémentation de la méthode d'entrée
+    std::string waitInput(const std::string& message = "") override;
+
+protected:
+    // Méthodes utilitaires
+    std::string getColorCode(ShellType type) const {
+        switch (type) {
+            case ShellType::INFO: return getAnsiCode(ANSI_Effect::BOLD, ANSI_Color::FG_BLUE);
+            case ShellType::WARNING: return getAnsiCode(ANSI_Effect::BOLD, ANSI_Color::FG_YELLOW);
+            case ShellType::ERROR: return getAnsiCode(ANSI_Effect::BOLD, ANSI_Color::FG_RED);
+            case ShellType::SUCCESS: return getAnsiCode(ANSI_Effect::BOLD, ANSI_Color::FG_GREEN);
+            default: return resetAnsi();
+        }
+    }
+
+private:
+    // Interdiction de la copie (déjà géré par IShell)
+    using IShell::IShell;
 };
 
 } // namespace FusioCore
-
-#endif // SHELL_HPP
