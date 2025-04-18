@@ -5,6 +5,8 @@
 #include <memory>
 #include <string>
 
+#include "Shell/Completer.hpp"
+
 namespace FusioCore {
 
 class Completer;
