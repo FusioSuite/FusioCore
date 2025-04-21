@@ -21,6 +21,9 @@ message(STATUS "Using Eigen from: ${eigen_SOURCE_DIR}")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Générer compile_commands.json pour le linter
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Définir les variables pour le fichier Version.hpp
 set(PROJECT_DESCRIPTION "Core software for the FusioSuite")
 set(PROJECT_AUTHOR "FusioSuite Team")
@@ -48,6 +51,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_BINARY_DIR}
     ${eigen_SOURCE_DIR}  # Fournit l'accès à <Eigen/Dense>
+)
+
+# Exporter les chemins d'inclusion pour le linter
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/inc"
 )
 
 # Lier les bibliothèques externes
