@@ -1,5 +1,7 @@
-#include "../inc/Shell/Shell.hpp"
-#include "../inc/Value/Value.hpp"
+#include "Shell/Shell.hpp"
+#include "Value/Value.hpp"
+#include "Expression/ExpressionEvaluatorFactory.hpp"
+
 #include <iostream>
 
 int main(int argc, char* argv[]) {
@@ -58,6 +60,31 @@ int main(int argc, char* argv[]) {
         shell.print("v3 = " + v3.toString());
         shell.print("m1 * v3 = " + (m1 * v3).toString());
         
+        // Exemples d'utilisation de l'évaluateur d'expressions
+        shell.print("\n--- Évaluation d'expressions avec ExprTk ---", FusioCore::ShellType::INFO);
+        
+        // Créer un évaluateur d'expressions
+        auto evaluator = FusioCore::ExpressionEvaluatorFactory::createEvaluator(FusioCore::EvaluatorType::EXPRTK);
+        
+        // Définir des variables
+        evaluator->setVariable("x", std::make_shared<FusioCore::Scalar>(5.0));
+        evaluator->setVariable("y", std::make_shared<FusioCore::Scalar>(3.0));
+        
+        // Évaluer des expressions simples
+        shell.print("x + y = " + evaluator->evaluate("x + y")->toString());
+        shell.print("x * y = " + evaluator->evaluate("x * y")->toString());
+        shell.print("x^2 + y^2 = " + evaluator->evaluate("x^2 + y^2")->toString());
+        
+        // Évaluer des expressions plus complexes
+        shell.print("sin(x) + cos(y) = " + evaluator->evaluate("sin(x) + cos(y)")->toString());
+        shell.print("sqrt(x^2 + y^2) = " + evaluator->evaluate("sqrt(x^2 + y^2)")->toString());
+        shell.print("log(x) + exp(y) = " + evaluator->evaluate("log(x) + exp(y)")->toString());
+        
+        // Vérifier la validité d'une expression
+        std::string invalidExpr = "x + * y";
+        shell.print("L'expression '" + invalidExpr + "' est " + 
+                   (evaluator->isValid(invalidExpr) ? "valide" : "invalide"));
+        
         // Boucle principale
         shell.print("\n=== Entrée en mode interactif ===", FusioCore::ShellType::INFO);
         while (true) {
@@ -65,8 +92,14 @@ int main(int argc, char* argv[]) {
             if (input == "exit") {
                 break;
             }
-            // Traitement des commandes ici
-            shell.print(input);
+            
+            // Essayer d'évaluer l'expression
+            try {
+                auto result = evaluator->evaluate(input);
+                shell.print("Résultat: " + result->toString(), FusioCore::ShellType::SUCCESS);
+            } catch (const std::exception& e) {
+                shell.print("Erreur: " + std::string(e.what()), FusioCore::ShellType::ERROR);
+            }
         }
         
         return 0;

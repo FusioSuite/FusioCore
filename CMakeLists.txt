@@ -14,8 +14,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Eigen)
 
-# Debug : afficher le chemin utilisé pour Eigen
-message(STATUS "Using Eigen from: ${eigen_SOURCE_DIR}")
+FetchContent_Declare(
+    ExprTk
+    GIT_REPOSITORY https://github.com/GuyGnole/exprtk.git
+    GIT_TAG        master  # ou un tag/commit spécifique
+)
+FetchContent_MakeAvailable(ExprTk)
 
 # Spécifier le standard C++
 set(CMAKE_CXX_STANDARD 17)
@@ -50,7 +54,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${eigen_SOURCE_DIR}  # Fournit l'accès à <Eigen/Dense>
+    ${eigen_SOURCE_DIR}
+    ${exprtk_SOURCE_DIR}
 )
 
 # Exporter les chemins d'inclusion pour le linter
@@ -58,11 +63,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/inc"
 )
 
-# Lier les bibliothèques externes
-target_link_libraries(${PROJECT_NAME} PRIVATE 
-    readline
-    Threads::Threads
-)
+# # Lier les bibliothèques externes
+# target_link_libraries(${PROJECT_NAME} PRIVATE 
+#     Threads::Threads
+# )
 
 # Options de compilation
 if(MSVC)
