@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EXPRTK_EVALUATOR_HPP
+#define EXPRTK_EVALUATOR_HPP
 
 #include "Expression/IExpressionEvaluator.hpp"
 #include <map>
@@ -46,3 +47,5 @@ private:
 };
 
 } // namespace FusioCore 
+
+#endif // EXPRTK_EVALUATOR_HPP
