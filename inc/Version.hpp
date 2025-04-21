@@ -26,13 +26,13 @@ struct Version {
     static constexpr const char* URL = "https://github.com/FusioSuite/FusioCore";
     
     // Date de compilation
-    static constexpr const char* BUILD_DATE = "2025-04-18";
+    static constexpr const char* BUILD_DATE = "2025-04-21";
     
     // Compilateur utilisé
     static constexpr const char* COMPILER = "GNU";
     
     // Version du compilateur
-    static constexpr const char* COMPILER_VERSION = "14.2.1";
+    static constexpr const char* COMPILER_VERSION = "15.0.1";
 };
 
 } // namespace FusioCore

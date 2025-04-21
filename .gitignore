@@ -37,4 +37,4 @@ build/
 
 *.txt
 
-Version.hpp
+inc/Version.hpp

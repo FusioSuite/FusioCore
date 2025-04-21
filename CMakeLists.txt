@@ -3,6 +3,20 @@ cmake_minimum_required(VERSION 3.10)
 # Nom du projet et version
 project(FusioCore VERSION 0.1.0)
 
+# Inclure FetchContent pour gérer les dépendances externes
+include(FetchContent)
+
+# Télécharger et configurer Eigen depuis ton fork GitHub
+FetchContent_Declare(
+    Eigen
+    GIT_REPOSITORY https://github.com/FusioSuite/fusio-eigen.git
+    GIT_TAG        3.4.0
+)
+FetchContent_MakeAvailable(Eigen)
+
+# Debug : afficher le chemin utilisé pour Eigen
+message(STATUS "Using Eigen from: ${eigen_SOURCE_DIR}")
+
 # Spécifier le standard C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,11 +26,9 @@ set(PROJECT_DESCRIPTION "Core software for the FusioSuite")
 set(PROJECT_AUTHOR "FusioSuite Team")
 set(PROJECT_YEAR "2025")
 set(PROJECT_URL "https://github.com/FusioSuite/FusioCore")
-
-# Obtenir la date de compilation
 string(TIMESTAMP CMAKE_BUILD_DATE "%Y-%m-%d")
 
-# Trouver le module Threads avant replxx
+# Trouver le module Threads
 find_package(Threads REQUIRED)
 
 # Générer un fichier d'en-tête avec les informations du projet
@@ -31,10 +43,11 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 # Créer l'exécutable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Ajouter les répertoires d'en-tête (après avoir créé la cible)
+# Ajouter les répertoires d'en-tête
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${eigen_SOURCE_DIR}  # Fournit l'accès à <Eigen/Dense>
 )
 
 # Lier les bibliothèques externes
