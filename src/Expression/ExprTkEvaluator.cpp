@@ -16,6 +16,12 @@ ExprTkEvaluator::ExprTkEvaluator() {
 ExprTkEvaluator::~ExprTkEvaluator() = default;
 
 std::shared_ptr<IValue> ExprTkEvaluator::evaluate(const std::string& expression) {
+    // Vérifier si c'est une variable
+    auto it = variables_.find(expression);
+    if (it != variables_.end()) {
+        return it->second;
+    }
+    
     // Vérifier si l'expression est valide
     if (!isValid(expression)) {
         throw std::runtime_error("Expression invalide: " + expression);
@@ -34,6 +40,10 @@ std::shared_ptr<IValue> ExprTkEvaluator::evaluate(const std::string& expression)
 }
 
 bool ExprTkEvaluator::isValid(const std::string& expression) {
+    // Vérifier si c'est une variable
+    if (variables_.find(expression) != variables_.end()) {
+        return true;
+    }
     return parser_.compile(expression, expression_);
 }
 
@@ -78,8 +88,16 @@ double ExprTkEvaluator::valueToDouble(const std::shared_ptr<IValue>& value) cons
         return scalar->getValue();
     }
     
-    // Pour les vecteurs et matrices, on peut retourner leur norme ou une autre métrique
-    // Ici, on retourne simplement 0 pour éviter les erreurs
+    if (value->isVector()) {
+        auto vector = std::dynamic_pointer_cast<Vector>(value);
+        return vector->getData().norm(); // Retourne la norme du vecteur
+    }
+    
+    if (value->isMatrix()) {
+        auto matrix = std::dynamic_pointer_cast<Matrix>(value);
+        return matrix->getData().norm(); // Retourne la norme de la matrice
+    }
+    
     return 0.0;
 }
 

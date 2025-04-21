@@ -44,7 +44,7 @@ std::string Matrix::toString() const {
     for (int i = 0; i < data_.rows(); ++i) {
         if (i > 0) oss << "; ";
         for (int j = 0; j < data_.cols(); ++j) {
-            if (j > 0) oss << ", ";
+            if (j > 0) oss << " ";
             oss << std::fixed << std::setprecision(6) << data_(i, j);
         }
     }
