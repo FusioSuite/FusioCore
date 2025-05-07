@@ -11,6 +11,8 @@ FusioInterpreter::FusioInterpreter()
     , assignmentRegex_("^\\s*([a-zA-Z][a-zA-Z0-9_]*)\\s*=\\s*(.+)\\s*$")
     , vectorRegex_("^\\s*\\[(.+)\\]\\s*$")
     , matrixRegex_("^\\s*\\[(.+)\\]\\s*$")
+    , scalarMatrixOpRegex_("^\\s*([0-9.]+)\\s*\\*\\s*([a-zA-Z][a-zA-Z0-9_]*)\\s*$")
+    , matrixScalarOpRegex_("^\\s*([a-zA-Z][a-zA-Z0-9_]*)\\s*\\*\\s*([0-9.]+)\\s*$")
 {
 }
 
@@ -21,6 +23,65 @@ std::shared_ptr<IValue> FusioInterpreter::evaluate(const std::string& input) {
     auto value = evaluator_->getVariable(input);
     if (value) {
         return value;
+    }
+    
+    // Si l'entrée est un identifiant valide (lettre suivie de lettres/chiffres), c'est une variable non définie
+    if (std::regex_match(input, std::regex("^[a-zA-Z][a-zA-Z0-9_]*$"))) {
+        throw std::runtime_error("Variable non définie : " + input);
+    }
+    
+    // Vérifier si c'est une fonction mathématique sur une matrice
+    std::regex funcMatrixRegex("^(sin|cos|tan|exp|log|log10|sqrt)\\s*\\(([a-zA-Z][a-zA-Z0-9_]*)\\)$");
+    std::smatch funcMatrixMatch;
+    if (std::regex_match(input, funcMatrixMatch, funcMatrixRegex)) {
+        std::string funcName = funcMatrixMatch[1].str();
+        std::string matrixName = funcMatrixMatch[2].str();
+        
+        auto matrixValue = evaluator_->getVariable(matrixName);
+        if (matrixValue && matrixValue->isMatrix()) {
+            auto matrix = std::dynamic_pointer_cast<Matrix>(matrixValue);
+            Eigen::MatrixXd result = matrix->getData();
+            
+            // Appliquer la fonction élément par élément
+            for(int i = 0; i < result.rows(); ++i) {
+                for(int j = 0; j < result.cols(); ++j) {
+                    if(funcName == "sin") result(i,j) = std::sin(result(i,j));
+                    else if(funcName == "cos") result(i,j) = std::cos(result(i,j));
+                    else if(funcName == "tan") result(i,j) = std::tan(result(i,j));
+                    else if(funcName == "exp") result(i,j) = std::exp(result(i,j));
+                    else if(funcName == "log") result(i,j) = std::log(result(i,j));
+                    else if(funcName == "log10") result(i,j) = std::log10(result(i,j));
+                    else if(funcName == "sqrt") result(i,j) = std::sqrt(result(i,j));
+                }
+            }
+            return std::make_shared<Matrix>(result);
+        }
+    }
+    
+    // Vérifier si c'est une opération scalaire * matrice
+    std::smatch scalarMatrixMatch;
+    if (std::regex_match(input, scalarMatrixMatch, scalarMatrixOpRegex_)) {
+        double scalarValue = std::stod(scalarMatrixMatch[1].str());
+        std::string matrixName = scalarMatrixMatch[2].str();
+        
+        auto matrixValue = evaluator_->getVariable(matrixName);
+        if (matrixValue && matrixValue->isMatrix()) {
+            auto matrix = std::dynamic_pointer_cast<Matrix>(matrixValue);
+            return std::make_shared<Matrix>(matrix->getData() * scalarValue);
+        }
+    }
+    
+    // Vérifier si c'est une opération matrice * scalaire
+    std::smatch matrixScalarMatch;
+    if (std::regex_match(input, matrixScalarMatch, matrixScalarOpRegex_)) {
+        std::string matrixName = matrixScalarMatch[1].str();
+        double scalarValue = std::stod(matrixScalarMatch[2].str());
+        
+        auto matrixValue = evaluator_->getVariable(matrixName);
+        if (matrixValue && matrixValue->isMatrix()) {
+            auto matrix = std::dynamic_pointer_cast<Matrix>(matrixValue);
+            return std::make_shared<Matrix>(matrix->getData() * scalarValue);
+        }
     }
     
     // Vérifier si c'est une assignation

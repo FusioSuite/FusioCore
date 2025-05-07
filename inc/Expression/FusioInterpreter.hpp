@@ -97,6 +97,8 @@ private:
     std::regex assignmentRegex_;
     std::regex vectorRegex_;
     std::regex matrixRegex_;
+    std::regex scalarMatrixOpRegex_;
+    std::regex matrixScalarOpRegex_;
 };
 
 } // namespace FusioCore 
