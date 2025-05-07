@@ -38,3 +38,5 @@ build/
 *.txt
 
 inc/Version.hpp
+
+doc/doxygen/html
