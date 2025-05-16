@@ -1,0 +1,15 @@
+/**
+ * @page fusio_archi Architecture Fusio
+ *
+ * \tableofcontents
+ *
+ * @section intro Introduction
+ * Le moteur FusioCore est un interpréteur...
+ *
+ * @section structure Structure du projet
+ * - inc/
+ * - src/
+ *
+ * @section sdk FusioSDK
+ * Permet de créer des extensions dynamiques.
+ */

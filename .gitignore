@@ -39,4 +39,4 @@ build/
 
 inc/Version.hpp
 
-doc/doxygen/html
+doc/html
